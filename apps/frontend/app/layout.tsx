@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SocketProvider } from "@/context/SocketProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={``}>{children}</body>
+      <SocketProvider>
+        <body className={``}>{children}</body>
+      </SocketProvider>
     </html>
   );
 }
