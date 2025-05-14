@@ -4,14 +4,16 @@ import React, { useEffect, useState } from "react";
 
 const ChatComponent = () => {
   const [message, setMessage] = useState<string>("");
-  const [allMessages] = useState<string[]>([]);
+  const [allMessages, setAllMessage] = useState<string[]>([]);
 
-  const { sendMessage , messages } = useSocket();
+  const { sendMessage, messages } = useSocket();
 
   useEffect(() => {
     console.log("Messages from Socket ...", messages);
     if (messages && messages.length > 0) {
-      allMessages.push(messages[messages.length - 1]);
+      console.log("All Messages messages ...", messages);
+      // allMessages.push(messages[messages.length - 1]);
+      setAllMessage(messages);
       console.log("All Messages ...", allMessages);
     }
   }, [allMessages, messages]);
@@ -22,6 +24,7 @@ const ChatComponent = () => {
       return;
     }
     sendMessage(message);
+    setMessage("");
   };
 
   return (
@@ -36,7 +39,9 @@ const ChatComponent = () => {
         <button
           className="bg-blue-500 text-white rounded mt-2 p-4 px-4"
           onClick={handleSendMessage}
-        >Send Message</button>
+        >
+          Send Message
+        </button>
       </div>
       <div>
         {allMessages && allMessages.length > 0 ? (

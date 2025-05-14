@@ -10,12 +10,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "6.7.0",
     "ioredis": "^5.6.1",
     "socket.io": "^4.8.1",
     "tsc-watch": "^6.2.1",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@repo/db": "workspace:*"
   }
 }
