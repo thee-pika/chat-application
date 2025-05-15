@@ -33,10 +33,18 @@ class SocketService {
   public initListeners() {
     this._io.on("connect", (socket) => {
       console.log("new User Connected ", socket.id);
+
       socket.on("event:message", async ({ message }) => {
         console.log("Message Received ...", message);
         await pub.publish("MESSAGES", message);
         // this._io.emit("message", message);
+      });
+
+      socket.on("join-room", async (data) => {
+        const input = JSON.parse(data);
+
+        socket.to(input.roomId).emit("chat-message", input.message);
+        await pub.publish(input.roomId, input.message);
       });
     });
 
@@ -45,8 +53,10 @@ class SocketService {
       if (channel === "MESSAGES") {
         console.log("Message Received from Redis ...", message);
         this._io.emit("message", message);
-        produceMessage(message);
-        
+        produceMessage(message , channel);
+      }else {
+        this._io.emit(channel, message);
+        produceMessage(message , channel)
       }
     });
   }

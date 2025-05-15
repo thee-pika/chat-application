@@ -36,21 +36,21 @@ const createPrdoucer = async () => {
   return producer;
 };
 
-export const produceMessage = async (message: string) => {
+export const produceMessage = async (message: string, channel: string) => {
   const producer = await createPrdoucer();
 
   await producer.send({
-    messages: [{ key: `messages-${Date.now()}`, value: message }],
-    topic: "MESSAGES",
+    messages: [{ key: `messages-${Date.now()}`, value: message}],
+    topic: channel,
   });
 
   return true;
 };
 
-export const startMessageConsumer = () => {
+export const startMessageConsumer = (channel:string) => {
   const consumer = kafka.consumer({ groupId: "default" });
   consumer.connect();
-  consumer.subscribe({ topic: "MESSAGES", fromBeginning: true });
+  consumer.subscribe({ topic: channel, fromBeginning: true });
 
   consumer.run({
     autoCommit: true,
@@ -61,7 +61,7 @@ export const startMessageConsumer = () => {
 
           await prisma.message.create({
             data: {
-              channel: "MESSAGES",
+              channel,
               message: messageValue,
             },
           });
@@ -70,7 +70,7 @@ export const startMessageConsumer = () => {
           console.log("Something is wrong in db");
           pause();
           setTimeout(() => {
-            consumer.resume([{ topic: "MESSAGES" }]);
+            consumer.resume([{ topic: channel }]);
           }, 60 * 1000);
         }
       }
