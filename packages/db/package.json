@@ -2,10 +2,10 @@
   "name": "@repo/db",
   "version": "1.0.0",
   "description": "",
-  "exports" : "./src/index.ts",
+  "exports" : "./dist/index.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc -b && cp -R src/generated dist/generated && node dist/index.js "
   },
   "keywords": [],
   "author": "",

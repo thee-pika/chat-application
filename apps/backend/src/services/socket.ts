@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import Redis from "ioredis";
+import { produceMessage } from "./kafka";
 
 const pub = new Redis({
   host: "localhost",
@@ -44,6 +45,8 @@ class SocketService {
       if (channel === "MESSAGES") {
         console.log("Message Received from Redis ...", message);
         this._io.emit("message", message);
+        produceMessage(message);
+        
       }
     });
   }
