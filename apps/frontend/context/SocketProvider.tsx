@@ -11,6 +11,7 @@ interface SocketProviderProps {
 interface SocketContextType {
   sendMessage: (message: string) => void;
   messages: string[];
+  createRoom: (roomName: string, message: string) => void;
 }
 
 export const useSocket = () => {
@@ -64,8 +65,25 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     [socket]
   );
 
+  const createRoom = useCallback(
+    (roomId: string, message: string) => {
+      console.log(
+        "roomId in callllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+        roomId,
+        " message",
+        message
+      );
+      if (!socket) {
+        console.log("Socket is not initialized");
+        return;
+      }
+      socket.emit("join-room", JSON.stringify({ roomId, message }));
+    },
+    [socket]
+  );
+
   return (
-    <socketContext.Provider value={{ sendMessage , messages }}>
+    <socketContext.Provider value={{ sendMessage, messages, createRoom }}>
       {children}
     </socketContext.Provider>
   );

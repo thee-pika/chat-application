@@ -10,35 +10,35 @@ datasource db {
 
 model Message {
   id        String   @id @default(uuid())
-  message   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  content   String
+  chatId    String
   channel   String?
   userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chat      Chat     @relation(fields: [chatId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 }
 
+model Chat {
+  id        String             @id @default(uuid())
+  messages  Message[]
+  members   ChatParticipants[]
+  groupChat Boolean
+}
+
+model ChatParticipants {
+  id     String @id @default(uuid())
+  userId String
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id])
+}
+
 model User {
-  id       String        @id @default(uuid())
+  id       String    @id @default(uuid())
   username String
   password String
+  avatar   String?
+  bio      String?
   messages Message[]
-  groups   GroupMember[]
-}
-
-model Group {
-  id           String        @id @default(uuid())
-  name         String
-  admin        String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  groupMembers GroupMember[]
-}
-
-model GroupMember {
-  id      String @id @default(uuid())
-  userId  String
-  groupId String
-  user    User   @relation(fields: [userId], references: [id])
-  group   Group  @relation(fields: [groupId], references: [id])
 }

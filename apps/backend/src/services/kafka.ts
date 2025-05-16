@@ -47,7 +47,7 @@ export const produceMessage = async (message: string, channel: string) => {
   return true;
 };
 
-export const startMessageConsumer = (channel:string) => {
+export const startMessageConsumer = (channel: string) => {
   const consumer = kafka.consumer({ groupId: "default" });
   consumer.connect();
   consumer.subscribe({ topic: channel, fromBeginning: true });
